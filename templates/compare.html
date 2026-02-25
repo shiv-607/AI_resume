@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Resumes - Resume Analyzer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .resume-upload-container {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        .resume-upload-container:hover {
+            border-color: #007bff;
+            background-color: #f0f7ff;
+        }
+        
+        .comparison-results {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .comparison-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+        
+        .comparison-card-header {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .comparison-card-body {
+            padding: 20px;
+        }
+        
+        .score-display {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .difference-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .winner-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">Resume Analyzer</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analyzer">Analyzer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/compare">Compare</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h1 class="display-4 fw-bold mb-3">Resume Comparison</h1>
+                <p class="lead">Upload two resumes to compare them side by side and see which one is stronger.</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <form id="compareForm" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-6 mb-4 mb-md-0">
+                                    <h4 class="mb-3 text-center">Resume 1</h4>
+                                    <div class="resume-upload-container" id="resume1Container">
+                                        <i class="fas fa-file-upload fa-3x mb-3 text-primary"></i>
+                                        <h5 class="mb-2">Upload First Resume</h5>
+                                        <p class="text-muted mb-3">Supported formats: PDF, DOCX, TXT</p>
+                                        <input type="file" class="form-control" id="resume1" name="resume1" accept=".pdf,.docx,.txt">
+                                        <div class="mt-3" id="resume1Name"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4 class="mb-3 text-center">Resume 2</h4>
+                                    <div class="resume-upload-container" id="resume2Container">
+                                        <i class="fas fa-file-upload fa-3x mb-3 text-primary"></i>
+                                        <h5 class="mb-2">Upload Second Resume</h5>
+                                        <p class="text-muted mb-3">Supported formats: PDF, DOCX, TXT</p>
+                                        <input type="file" class="form-control" id="resume2" name="resume2" accept=".pdf,.docx,.txt">
+                                        <div class="mt-3" id="resume2Name"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-5" id="compareButton">
+                                    <i class="fas fa-exchange-alt me-2"></i>Compare Resumes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Analyzing and comparing resumes...</p>
+            <p class="text-muted small">This may take a minute or two.</p>
+        </div>
+        
+        <div class="comparison-results" id="comparisonResults">
+            <div class="row mb-4">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold">Comparison Results</h2>
+                    <p class="text-muted">Here's how the two resumes compare against each other</p>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <div class="comparison-card position-relative">
+                        <div class="comparison-card-header">
+                            <h4 class="mb-0" id="resume1Title">Resume 1</h4>
+                        </div>
+                        <div class="score-display">
+                            <div class="score-circle bg-primary" id="score1Circle">85</div>
+                            <h5>Overall Score</h5>
+                        </div>
+                        <div class="comparison-card-body">
+                            <h5 class="mb-3">Strengths</h5>
+                            <ul class="list-group mb-4" id="strengths1List">
+                                <!-- Strengths will be populated here -->
+                            </ul>
+                            
+                            <h5 class="mb-3">Areas for Improvement</h5>
+                            <ul class="list-group" id="improvements1List">
+                                <!-- Improvements will be populated here -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="comparison-card position-relative">
+                        <div id="winnerBadge" class="winner-badge">Stronger Resume</div>
+                        <div class="comparison-card-header">
+                            <h4 class="mb-0" id="resume2Title">Resume 2</h4>
+                        </div>
+                        <div class="score-display">
+                            <div class="score-circle bg-success" id="score2Circle">92</div>
+                            <h5>Overall Score</h5>
+                        </div>
+                        <div class="comparison-card-body">
+                            <h5 class="mb-3">Strengths</h5>
+                            <ul class="list-group mb-4" id="strengths2List">
+                                <!-- Strengths will be populated here -->
+                            </ul>
+                            
+                            <h5 class="mb-3">Areas for Improvement</h5>
+                            <ul class="list-group" id="improvements2List">
+                                <!-- Improvements will be populated here -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h4 class="mb-0">Key Differences</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <h5 class="mb-3">Experience</h5>
+                                <div id="experienceDifferences">
+                                    <!-- Experience differences will be populated here -->
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5 class="mb-3">Skills</h5>
+                                <div id="skillsDifferences">
+                                    <!-- Skills differences will be populated here -->
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5 class="mb-3">Education</h5>
+                                <div id="educationDifferences">
+                                    <!-- Education differences will be populated here -->
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h5 class="mb-3">Achievements</h5>
+                                <div id="achievementsDifferences">
+                                    <!-- Achievements differences will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button type="button" class="btn btn-outline-primary btn-lg" id="compareAgainButton">
+                        <i class="fas fa-redo me-2"></i>Compare Different Resumes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2025 Resume Analyzer. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const compareForm = document.getElementById('compareForm');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const comparisonResults = document.getElementById('comparisonResults');
+            const compareAgainButton = document.getElementById('compareAgainButton');
+            
+            // File input change handlers
+            document.getElementById('resume1').addEventListener('change', function(e) {
+                const fileName = e.target.files[0]?.name || '';
+                document.getElementById('resume1Name').textContent = fileName ? `Selected: ${fileName}` : '';
+            });
+            
+            document.getElementById('resume2').addEventListener('change', function(e) {
+                const fileName = e.target.files[0]?.name || '';
+                document.getElementById('resume2Name').textContent = fileName ? `Selected: ${fileName}` : '';
+            });
+            
+            // Form submission
+            compareForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const resume1 = document.getElementById('resume1').files[0];
+                const resume2 = document.getElementById('resume2').files[0];
+                
+                if (!resume1 || !resume2) {
+                    alert('Please select both resumes to compare.');
+                    return;
+                }
+                
+                // Show loading spinner
+                loadingSpinner.style.display = 'block';
+                
+                // Create form data
+                const formData = new FormData();
+                formData.append('resume1', resume1);
+                formData.append('resume2', resume2);
+                
+                // Send API request
+                fetch('/compare', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayComparisonResults(data.comparison);
+                    } else {
+                        alert('Error: ' + (data.error || 'Failed to compare resumes'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while comparing the resumes.');
+                })
+                .finally(() => {
+                    loadingSpinner.style.display = 'none';
+                });
+            });
+            
+            // Display comparison results
+            function displayComparisonResults(comparison) {
+                // Set scores
+                const score1 = comparison.overall_comparison.score_resume1;
+                const score2 = comparison.overall_comparison.score_resume2;
+                document.getElementById('score1Circle').textContent = score1;
+                document.getElementById('score2Circle').textContent = score2;
+                
+                // Set winner badge
+                const winnerBadge = document.getElementById('winnerBadge');
+                if (comparison.overall_comparison.stronger_resume === "1") {
+                    winnerBadge.style.display = 'block';
+                    winnerBadge.parentElement.parentElement.classList.remove('col-md-6');
+                    winnerBadge.parentElement.parentElement.classList.add('col-md-6');
+                    winnerBadge.parentElement.parentElement.previousElementSibling.classList.remove('mb-4');
+                    winnerBadge.parentElement.parentElement.previousElementSibling.classList.add('mb-4', 'mb-md-0');
+                    document.getElementById('score1Circle').classList.remove('bg-primary');
+                    document.getElementById('score1Circle').classList.add('bg-success');
+                    document.getElementById('score2Circle').classList.remove('bg-success');
+                    document.getElementById('score2Circle').classList.add('bg-primary');
+                    winnerBadge.parentElement.parentElement.previousElementSibling.appendChild(winnerBadge);
+                }
+                
+                // Populate differences
+                populateDifferences('experienceDifferences', comparison.key_differences.experience);
+                populateDifferences('skillsDifferences', comparison.key_differences.skills);
+                populateDifferences('educationDifferences', comparison.key_differences.education);
+                populateDifferences('achievementsDifferences', comparison.key_differences.achievements);
+                
+                // Populate recommendations
+                populateList('strengths1List', comparison.recommendations.resume1.slice(0, 3));
+                populateList('improvements1List', comparison.recommendations.resume1.slice(3));
+                populateList('strengths2List', comparison.recommendations.resume2.slice(0, 3));
+                populateList('improvements2List', comparison.recommendations.resume2.slice(3));
+                
+                // Show results
+                comparisonResults.style.display = 'block';
+                
+                // Scroll to results
+                comparisonResults.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            function populateDifferences(elementId, differences) {
+                const container = document.getElementById(elementId);
+                container.innerHTML = '';
+                
+                if (differences && differences.length > 0) {
+                    differences.forEach(diff => {
+                        const diffItem = document.createElement('div');
+                        diffItem.className = 'difference-item';
+                        diffItem.textContent = diff;
+                        container.appendChild(diffItem);
+                    });
+                } else {
+                    container.innerHTML = '<p class="text-muted">No significant differences found.</p>';
+                }
+            }
+            
+            function populateList(elementId, items) {
+                const list = document.getElementById(elementId);
+                list.innerHTML = '';
+                
+                if (items && items.length > 0) {
+                    items.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.textContent = item;
+                        list.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item text-muted';
+                    li.textContent = 'No data available';
+                    list.appendChild(li);
+                }
+            }
+            
+            // Compare again button
+            compareAgainButton.addEventListener('click', function() {
+                comparisonResults.style.display = 'none';
+                compareForm.reset();
+                document.getElementById('resume1Name').textContent = '';
+                document.getElementById('resume2Name').textContent = '';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

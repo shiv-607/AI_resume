@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Resume - Resume Analyzer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .pdf-container {
+            height: 80vh;
+            width: 100%;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .pdf-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">Resume Analyzer</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mb-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <a href="/" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Example Resume</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">This is an example of a well-structured resume that scores highly in our analysis. Use it as a reference when creating or updating your own resume.</p>
+                        
+                        <div class="d-flex justify-content-between mb-3">
+                            <a href="{{ url_for('static', filename='examples/example_resume.pdf') }}" class="btn btn-outline-primary" download>
+                                <i class="fas fa-download me-2"></i>Download PDF
+                            </a>
+                            <a href="/analyzer" class="btn btn-primary">
+                                <i class="fas fa-upload me-2"></i>Analyze Your Resume
+                            </a>
+                        </div>
+                        
+                        <div class="pdf-container">
+                            <iframe class="pdf-iframe" src="{{ url_for('static', filename='examples/example_resume.pdf') }}"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2023 Resume Analyzer. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

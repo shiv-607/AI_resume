@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analyzer - AI-Powered Resume Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Resume Analyzer</a>
+        </div>
+    </nav>
+
+    <div class="landing-hero">
+        <div class="container">
+            <div class="row align-items-center min-vh-75">
+                <div class="col-lg-8 mx-auto text-center py-5">
+                    <h1 class="display-3 fw-bold mb-4 text-gradient">AI-Powered Resume Analysis</h1>
+                    <p class="lead mb-4 fs-4">Get instant feedback on your resume with our advanced AI analysis. Improve your chances of landing your dream job with personalized recommendations.</p>
+                    
+                    <div class="row features mb-5 justify-content-center">
+                        <div class="col-md-4">
+                            <div class="feature-card p-4 mb-3">
+                                <div class="feature-icon mb-3">
+                                    <i class="fas fa-chart-line text-primary fa-2x"></i>
+                                </div>
+                                <h5 class="mb-2">Detailed Score Analysis</h5>
+                                <p class="text-muted small">Get a comprehensive score with detailed breakdown</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-card p-4 mb-3">
+                                <div class="feature-icon mb-3">
+                                    <i class="fas fa-search text-primary fa-2x"></i>
+                                </div>
+                                <h5 class="mb-2">Keyword Optimization</h5>
+                                <p class="text-muted small">Identify missing keywords to pass ATS systems</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-card p-4 mb-3">
+                                <div class="feature-icon mb-3">
+                                    <i class="fas fa-edit text-primary fa-2x"></i>
+                                </div>
+                                <h5 class="mb-2">Line-by-Line Improvements</h5>
+                                <p class="text-muted small">Get specific suggestions to enhance your content</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a href="/analyzer" class="btn btn-primary btn-lg px-5 py-3">
+                            <i class="fas fa-rocket me-2"></i>Start Analyzing
+                        </a>
+                        <!-- Add the new Compare Resumes button -->
+                        <a href="/compare" class="btn btn-success btn-lg px-4 py-3">
+                            <i class="fas fa-exchange-alt me-2"></i>Compare Resumes
+                        </a>
+                        <!-- Add the new Plagiarism Checker button -->
+                        <a href="/plagiarism" class="btn btn-warning btn-lg px-4 py-3">
+                            <i class="fas fa-search me-2"></i>Plagiarism Checker
+                        </a>
+                        <!-- Add LinkedIn Integration button -->
+                        <button type="button" class="btn btn-info btn-lg px-4 py-3" data-bs-toggle="modal" data-bs-target="#linkedinModal">
+                            <i class="fab fa-linkedin me-2"></i>LinkedIn Import
+                        </button>
+                        <!-- Replace the existing Example Resume button with this -->
+                        <button type="button" class="btn btn-outline-primary btn-lg px-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleResumeModal">
+                            <i class="fas fa-file-alt me-2"></i>Example Resume
+                        </button>
+                        <!-- Replace the existing Resume Format Guide button with this -->
+                        <button type="button" class="btn btn-outline-secondary btn-lg px-4 py-3" data-bs-toggle="modal" data-bs-target="#resumeGuideModal">
+                            <i class="fas fa-list-alt me-2"></i>Resume Format Guide
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-light py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="fw-bold">How It Works</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-upload fa-3x text-primary"></i>
+                            </div>
+                            <h4>1. Upload Your Resume</h4>
+                            <p class="text-muted">Upload your resume in PDF, DOCX, or TXT format.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-robot fa-3x text-primary"></i>
+                            </div>
+                            <h4>2. AI Analysis</h4>
+                            <p class="text-muted">Our AI analyzes your resume for strengths and areas of improvement.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-file-alt fa-3x text-primary"></i>
+                            </div>
+                            <h4>3. Get Detailed Report</h4>
+                            <p class="text-muted">Receive a comprehensive report with actionable suggestions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="fw-bold">Why Choose Our Resume Analyzer?</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <div class="feature-bullet">
+                                <i class="fas fa-check text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5>Advanced AI Technology</h5>
+                            <p class="text-muted">Powered by state-of-the-art AI models to provide accurate and helpful feedback.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <div class="feature-bullet">
+                                <i class="fas fa-check text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5>ATS-Friendly Recommendations</h5>
+                            <p class="text-muted">Get insights on how to optimize your resume for Applicant Tracking Systems.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <div class="feature-bullet">
+                                <i class="fas fa-check text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5>Industry-Specific Analysis</h5>
+                            <p class="text-muted">Tailored feedback based on best practices in your industry.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <div class="feature-bullet">
+                                <i class="fas fa-check text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5>Actionable Suggestions</h5>
+                            <p class="text-muted">Concrete examples of how to improve your resume content.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2025 Resume Analyzer. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<!-- Add this modal for displaying the example resume -->
+<div class="modal fade" id="exampleResumeModal" tabindex="-1" aria-labelledby="exampleResumeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleResumeModalLabel">Example Resume</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="pdf-container">
+          <iframe class="pdf-iframe" src="{{ url_for('static', filename='examples/example_resume.pdf') }}"></iframe>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="{{ url_for('static', filename='examples/example_resume.pdf') }}" class="btn btn-primary" download>
+          <i class="fas fa-download me-2"></i>Download PDF
+        </a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add this modal for displaying the resume format guide -->
+<div class="modal fade" id="resumeGuideModal" tabindex="-1" aria-labelledby="resumeGuideModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="resumeGuideModalLabel">Resume Format Guide</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="guide-container">
+          <div class="guide-section">
+            <h4><span class="guide-section-icon"><i class="fas fa-file-alt"></i></span>Resume Structure</h4>
+            <p>A well-structured resume should include these key sections:</p>
+            <ul>
+              <li><strong>Contact Information:</strong> Name, phone, email, location, LinkedIn (optional)</li>
+              <li><strong>Professional Summary:</strong> 2-3 sentences highlighting your experience and key achievements</li>
+              <li><strong>Work Experience:</strong> List in reverse chronological order</li>
+              <li><strong>Education:</strong> Degrees, certifications, relevant coursework</li>
+              <li><strong>Skills:</strong> Technical and soft skills relevant to the position</li>
+              <li><strong>Projects/Achievements:</strong> (Optional) Highlight significant accomplishments</li>
+            </ul>
+            
+            <div class="guide-example p-3 mb-3">
+              <h6 class="border-bottom pb-2 mb-3">Example Contact Section:</h6>
+              <div class="example-content">
+                <p class="mb-1"><strong>John Smith</strong></p>
+                <p class="mb-1">New York, NY | (555) 123-4567 | john.smith@email.com</p>
+                <p class="mb-0">linkedin.com/in/johnsmith | github.com/johnsmith</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="guide-section">
+            <h4><span class="guide-section-icon"><i class="fas fa-user-tie"></i></span>Professional Summary</h4>
+            <p>Your professional summary should be a brief overview of your experience, skills, and notable achievements. It's often the first thing recruiters read, so make it compelling.</p>
+            
+            <div class="guide-example p-3 mb-3">
+              <h6 class="border-bottom pb-2 mb-3">Example Professional Summary:</h6>
+              <div class="example-content">
+                <p class="mb-0">Results-driven Software Engineer with 5+ years of experience developing scalable web applications. Specialized in full-stack development using React, Node.js, and AWS. Improved application performance by 40% and reduced infrastructure costs by 25% at XYZ Company.</p>
+              </div>
+            </div>
+            
+            <div class="guide-tip">
+              <i class="fas fa-lightbulb me-2"></i> <strong>Pro Tip:</strong> Customize your summary for each job application to highlight relevant experience and skills.
+            </div>
+          </div>
+          
+          <div class="guide-section">
+            <h4><span class="guide-section-icon"><i class="fas fa-briefcase"></i></span>Work Experience</h4>
+            <p>For each position, include:</p>
+            <ul>
+              <li>Company name and location</li>
+              <li>Your job title</li>
+              <li>Employment dates (month/year)</li>
+              <li>3-5 bullet points highlighting achievements (not just responsibilities)</li>
+            </ul>
+            
+            <div class="guide-example p-3 mb-3">
+              <h6 class="border-bottom pb-2 mb-3">Example Work Experience Entry:</h6>
+              <div class="example-content">
+                <p class="mb-1"><strong>ABC TECH SOLUTIONS</strong> | San Francisco, CA</p>
+                <p class="mb-1"><em>Senior Software Developer</em> | January 2020 - Present</p>
+                <ul class="mb-0">
+                  <li>Led development of company's flagship mobile application, resulting in 200,000+ downloads and $1.2M in revenue</li>
+                  <li>Architected and implemented microservices infrastructure that reduced system downtime by 75%</li>
+                  <li>Mentored 5 junior developers, improving team productivity by 30% within 6 months</li>
+                  <li>Optimized database queries, reducing average page load time from 3.2s to 0.8s</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="guide-do-dont">
+              <div class="guide-do">
+                <h5><i class="fas fa-check-circle me-2"></i>Strong Bullet Points</h5>
+                <ul>
+                  <li>Start with strong action verbs (Developed, Implemented, Led)</li>
+                  <li>Include metrics and quantifiable results</li>
+                  <li>Focus on achievements, not just duties</li>
+                  <li>Show impact on business goals</li>
+                </ul>
+              </div>
+              <div class="guide-dont">
+                <h5><i class="fas fa-times-circle me-2"></i>Weak Bullet Points</h5>
+                <ul>
+                  <li>Starting with "Responsible for..."</li>
+                  <li>Listing job duties without results</li>
+                  <li>Using vague language without specifics</li>
+                  <li>Including irrelevant tasks</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="guide-section">
+            <h4><span class="guide-section-icon"><i class="fas fa-graduation-cap"></i></span>Education</h4>
+            <p>Include your highest level of education first. For each entry, include:</p>
+            <ul>
+              <li>Degree and major</li>
+              <li>Institution name and location</li>
+              <li>Graduation date (or expected)</li>
+              <li>GPA (if above 3.5)</li>
+              <li>Relevant coursework, honors, or achievements (optional)</li>
+            </ul>
+            
+            <div class="guide-example p-3 mb-3">
+              <h6 class="border-bottom pb-2 mb-3">Example Education Entry:</h6>
+              <div class="example-content">
+                <p class="mb-1"><strong>BACHELOR OF SCIENCE IN COMPUTER SCIENCE</strong></p>
+                <p class="mb-1">University of California, Berkeley | Berkeley, CA</p>
+                <p class="mb-0">Graduated: May 2019 | GPA: 3.8/4.0</p>
+                <p class="mb-0"><em>Relevant Coursework:</em> Data Structures, Algorithms, Machine Learning, Database Systems</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="guide-section">
+            <h4><span class="guide-section-icon"><i class="fas fa-tools"></i></span>Skills Section</h4>
+            <p>Organize your skills into categories for better readability. Include both technical and soft skills relevant to the position.</p>
+            
+            <div class="guide-example p-3 mb-3">
+              <h6 class="border-bottom pb-2 mb-3">Example Skills Section:</h6>
+              <div class="example-content">
+                <p class="mb-1"><strong>TECHNICAL SKILLS</strong></p>
+                <p class="mb-2">Programming Languages: JavaScript (ES6+), Python, Java, SQL</p>
+                <p class="mb-2">Frameworks/Libraries: React, Node.js, Express, Django, TensorFlow</p>
+                <p class="mb-2">Tools & Platforms: AWS, Docker, Git, Jenkins, Jira</p>
+                <p class="mb-1"><strong>SOFT SKILLS</strong></p>
+                <p class="mb-0">Team Leadership, Project Management, Problem-Solving, Communication, Agile Methodologies</p>
+              </div>
+            </div>
+            
+            <div class="guide-tip">
+              <i class="fas fa-exclamation-circle me-2"></i> <strong>Important:</strong> Match your skills section with keywords from the job description to pass ATS screening.
+            </div>
+          </div>
+          
+          <div class="guide-section">
+            <h4><span class="guide-section-icon"><i class="fas fa-pencil-alt"></i></span>Content Best Practices</h4>
+            
+            <div class="guide-tip mb-3">
+              <i class="fas fa-lightbulb me-2"></i> <strong>Pro Tip:</strong> Tailor your resume for each job application by matching keywords from the job description.
+            </div>
+            
+            <h5 class="mb-3">Action Verbs by Category:</h5>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="action-verbs-category">
+                  <h6>Leadership</h6>
+                  <p>Directed, Coordinated, Oversaw, Led, Managed, Supervised, Guided, Mentored, Delegated</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="action-verbs-category">
+                  <h6>Achievement</h6>
+                  <p>Achieved, Improved, Increased, Reduced, Exceeded, Surpassed, Accelerated, Maximized</p>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="action-verbs-category">
+                  <h6>Technical</h6>
+                  <p>Developed, Programmed, Engineered, Designed, Implemented, Coded, Debugged, Optimized</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="action-verbs-category">
+                  <h6>Communication</h6>
+                  <p>Presented, Negotiated, Collaborated, Consulted, Facilitated, Persuaded, Mediated</p>
+                </div>
+              </div>
+            </div>
+            
+            <h5 class="mb-3">Quantifying Achievements:</h5>
+            <div class="guide-example p-3 mb-3">
+              <div class="row">
+                <div class="col-md-6">
+                  <p class="mb-1"><strong>Before:</strong></p>
+                  <ul class="mb-3">
+                    <li>Improved website performance</li>
+                    <li>Managed a team</li>
+                    <li>Increased sales</li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <p class="mb-1"><strong>After:</strong></p>
+                  <ul class="mb-3">
+                    <li>Improved website load time by 65%, increasing user retention by 40%</li>
+                    <li>Managed a team of 12 developers across 3 time zones, delivering 15 projects on time</li>
+                    <li>Increased quarterly sales by 28% ($300K) through implementation of new CRM system</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="guide-section">
+            <h4><span class="guide-section-icon"><i class="fas fa-paint-brush"></i></span>Formatting Guidelines</h4>
+            <ul>
+              <li><strong>Length:</strong> 1-2 pages maximum (1 page for less than 10 years of experience)</li>
+              <li><strong>Font:</strong> Professional fonts like Arial, Calibri, or Garamond</li>
+              <li><strong>Size:</strong> 10-12pt for body text, 14-16pt for headings</li>
+              <li><strong>Margins:</strong> 0.5-1 inch on all sides</li>
+              <li><strong>Spacing:</strong> Consistent line spacing (1.0-1.15 recommended)</li>
+              <li><strong>Alignment:</strong> Left-aligned text (not justified)</li>
+              <li><strong>File Format:</strong> PDF is preferred (maintains formatting)</li>
+              <li><strong>Filename:</strong> FirstName_LastName_Resume.pdf</li>
+            </ul>
+            
+            <div class="guide-tip">
+              <i class="fas fa-exclamation-circle me-2"></i> <strong>Important:</strong> Ensure your resume is ATS-friendly by using a clean layout and avoiding tables, headers/footers, and graphics that can't be parsed.
+            </div>
+            
+            <h5 class="mt-3 mb-2">ATS Optimization Tips:</h5>
+            <ul>
+              <li>Use standard section headings (Experience, Education, Skills)</li>
+              <li>Avoid text in images, headers, or footers</li>
+              <li>Don't use tables for layout (ATS can't read them properly)</li>
+              <li>Minimize fancy formatting, columns, and graphics</li>
+              <li>Use standard bullet points (• or -)</li>
+              <li>Include keywords from the job description in context</li>
+            </ul>
+          </div>
+          
+          <div class="guide-section">
+            <h4><span class="guide-section-icon"><i class="fas fa-industry"></i></span>Industry-Specific Tips</h4>
+            
+            <div class="accordion" id="industryTipsAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTech">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTech" aria-expanded="false" aria-controls="collapseTech">
+                    Technology
+                  </button>
+                </h2>
+                <div id="collapseTech" class="accordion-collapse collapse" aria-labelledby="headingTech" data-bs-parent="#industryTipsAccordion">
+                  <div class="accordion-body">
+                    <ul>
+                      <li>Include GitHub/portfolio links</li>
+                      <li>List specific technologies, languages, and frameworks</li>
+                      <li>Highlight technical projects with measurable outcomes</li>
+                      <li>Include certifications and continuous learning</li>
+                      <li>Demonstrate problem-solving abilities with specific examples</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFinance">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFinance" aria-expanded="false" aria-controls="collapseFinance">
+                    Finance
+                  </button>
+                </h2>
+                <div id="collapseFinance" class="accordion-collapse collapse" aria-labelledby="headingFinance" data-bs-parent="#industryTipsAccordion">
+                  <div class="accordion-body">
+                    <ul>
+                      <li>Emphasize analytical skills and attention to detail</li>
+                      <li>Quantify financial impacts and cost savings</li>
+                      <li>Include relevant certifications (CFA, CPA, etc.)</li>
+                      <li>Highlight regulatory knowledge and compliance experience</li>
+                      <li>Demonstrate proficiency with financial software and tools</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingMarketing">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMarketing" aria-expanded="false" aria-controls="collapseMarketing">
+                    Marketing
+                  </button>
+                </h2>
+                <div id="collapseMarketing" class="accordion-collapse collapse" aria-labelledby="headingMarketing" data-bs-parent="#industryTipsAccordion">
+                  <div class="accordion-body">
+                    <ul>
+                      <li>Showcase campaign results with metrics (ROI, conversion rates, etc.)</li>
+                      <li>Include experience with marketing tools and platforms</li>
+                      <li>Highlight content creation and social media management skills</li>
+                      <li>Demonstrate understanding of analytics and data-driven decisions</li>
+                      <li>Include examples of creative problem-solving</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingHealthcare">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHealthcare" aria-expanded="false" aria-controls="collapseHealthcare">
+                    Healthcare
+                  </button>
+                </h2>
+                <div id="collapseHealthcare" class="accordion-collapse collapse" aria-labelledby="headingHealthcare" data-bs-parent="#industryTipsAccordion">
+                  <div class="accordion-body">
+                    <ul>
+                      <li>List all relevant certifications and licenses</li>
+                      <li>Emphasize patient care improvements and outcomes</li>
+                      <li>Highlight experience with healthcare systems and regulations</li>
+                      <li>Include specialized training and continuing education</li>
+                      <li>Demonstrate soft skills like empathy and communication</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="guide-section">
+            <h4><span class="guide-section-icon"><i class="fas fa-check"></i></span>Final Checklist</h4>
+            <ul>
+              <li>Proofread for spelling and grammar errors</li>
+              <li>Ensure consistent formatting (bullet points, spacing, etc.)</li>
+              <li>Verify all links and contact information are correct</li>
+              <li>Check that achievements are quantified where possible</li>
+              <li>Confirm all information is accurate and up-to-date</li>
+              <li>Remove any personal information (age, marital status, etc.)</li>
+              <li>Test your resume with an ATS simulator if possible</li>
+              <li>Have someone else review your resume for feedback</li>
+            </ul>
+            
+            <div class="guide-tip">
+              <i class="fas fa-lightbulb me-2"></i> <strong>Pro Tip:</strong> After applying, follow up within one week if you haven't heard back.
+            </div>
+            
+            <div class="guide-download-btn mt-4">
+              <a href="{{ url_for('static', filename='examples/resume_format_guide.pdf') }}" class="btn btn-primary" download>
+                <i class="fas fa-download me-2"></i>Download Guide as PDF
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update the LinkedIn Integration Modal -->
+<div class="modal fade" id="linkedinModal" tabindex="-1" aria-labelledby="linkedinModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="linkedinModalLabel"><i class="fab fa-linkedin me-2"></i>LinkedIn Profile Import</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6 border-end">
+            <div class="text-center py-4">
+              <i class="fab fa-linkedin fa-5x text-info mb-3"></i>
+              <h4 class="mb-3">Import from LinkedIn</h4>
+              <p class="mb-4">Connect your LinkedIn profile to automatically create a resume from your professional data.</p>
+              <div class="d-grid gap-3">
+                <button id="linkedinAuthBtn" class="btn btn-info btn-lg px-4">
+                  <i class="fab fa-linkedin me-2"></i>Connect with LinkedIn
+                </button>
+                <p class="text-muted">OR</p>
+                <button type="button" class="btn btn-outline-info btn-lg px-4" data-bs-toggle="collapse" data-bs-target="#uploadLinkedInData" aria-expanded="false" aria-controls="uploadLinkedInData">
+                  <i class="fas fa-file-upload me-2"></i>Upload LinkedIn Data
+                </button>
+              </div>
+              
+              <div class="collapse mt-4" id="uploadLinkedInData">
+                <div class="card card-body">
+                  <h5 class="mb-3">Upload LinkedIn Data Export</h5>
+                  <p class="text-muted mb-3">Download your data from LinkedIn and upload the ZIP file here.</p>
+                  
+                  <form id="linkedinUploadForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                      <label for="linkedinFile" class="form-label">LinkedIn Data Export (.zip)</label>
+                      <input class="form-control" type="file" id="linkedinFile" name="linkedinFile" accept=".zip">
+                    </div>
+                    <div class="d-grid">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload me-2"></i>Upload & Process
+                      </button>
+                    </div>
+                  </form>
+                  
+                  <div class="mt-3">
+                    <p class="small text-muted">
+                      <i class="fas fa-info-circle me-1"></i> How to get your LinkedIn data:
+                      <ol class="text-start small mt-2">
+                        <li>Go to LinkedIn and click on your profile picture</li>
+                        <li>Select "Settings & Privacy"</li>
+                        <li>Go to "Data Privacy" > "Get a copy of your data"</li>
+                        <li>Select "Download larger data archive"</li>
+                        <li>Request the archive and download when ready</li>
+                        <li>Upload the ZIP file here</li>
+                      </ol>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <h5 class="mb-3">Benefits:</h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i>Save time by importing your profile data</li>
+                <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i>Ensure your resume matches your LinkedIn profile</li>
+                <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i>Import your skills, experience, and education</li>
+                <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i>Keep your resume up-to-date with your LinkedIn</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div id="linkedinAuthSection" class="py-4">
+              <h4 class="mb-3">How It Works</h4>
+              <ol class="list-group list-group-numbered mb-4">
+                <li class="list-group-item d-flex">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">Connect Your LinkedIn</div>
+                    Click the "Connect with LinkedIn" button to authorize access
+                  </div>
+                </li>
+                <li class="list-group-item d-flex">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">Review Imported Data</div>
+                    We'll extract your profile information for you to review
+                  </div>
+                </li>
+                <li class="list-group-item d-flex">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">Edit and Enhance</div>
+                    Make any necessary adjustments to your imported resume
+                  </div>
+                </li>
+                <li class="list-group-item d-flex">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">Generate Your Resume</div>
+                    Create a professional resume from your LinkedIn data
+                  </div>
+                </li>
+              </ol>
+              
+              <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle me-2"></i> Your data is secure and will only be used to create your resume.
+              </div>
+            </div>
+            
+            <div id="linkedinLoadingSection" class="py-4 text-center" style="display: none;">
+              <div class="spinner-border text-info mb-3" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <h5>Processing...</h5>
+              <p class="text-muted">Please wait while we process your LinkedIn data.</p>
+            </div>
+            
+            <div id="linkedinSuccessSection" class="py-4" style="display: none;">
+              <div class="text-center mb-4">
+                <i class="fas fa-check-circle text-success fa-5x mb-3"></i>
+                <h4 class="text-success">Successfully Connected!</h4>
+                <p>Your LinkedIn profile has been imported.</p>
+              </div>
+              <div class="d-grid gap-2">
+                <a href="/linkedin-import" class="btn btn-success">
+                  <i class="fas fa-edit me-2"></i>Review & Edit Your Resume
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // LinkedIn integration functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const linkedinAuthBtn = document.getElementById('linkedinAuthBtn');
+    const linkedinAuthSection = document.getElementById('linkedinAuthSection');
+    const linkedinLoadingSection = document.getElementById('linkedinLoadingSection');
+    const linkedinSuccessSection = document.getElementById('linkedinSuccessSection');
+    const linkedinUploadForm = document.getElementById('linkedinUploadForm');
+    
+    if (linkedinAuthBtn) {
+      linkedinAuthBtn.addEventListener('click', function() {
+        // Show loading section
+        linkedinAuthSection.style.display = 'none';
+        linkedinLoadingSection.style.display = 'block';
+        
+        // Redirect to LinkedIn OAuth authorization page
+        window.location.href = '/linkedin-auth';
+      });
+    }
+    
+    if (linkedinUploadForm) {
+      linkedinUploadForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading section
+        linkedinAuthSection.style.display = 'none';
+        linkedinLoadingSection.style.display = 'block';
+        
+        const formData = new FormData(linkedinUploadForm);
+        
+        fetch('/linkedin-upload', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Show success section
+            linkedinLoadingSection.style.display = 'none';
+            linkedinSuccessSection.style.display = 'block';
+            
+            // Redirect to the LinkedIn import page after a short delay
+            setTimeout(function() {
+              window.location.href = data.redirect;
+            }, 1500);
+          } else {
+            // Show error
+            linkedinLoadingSection.style.display = 'none';
+            linkedinAuthSection.style.display = 'block';
+            alert('Error: ' + data.error);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          linkedinLoadingSection.style.display = 'none';
+          linkedinAuthSection.style.display = 'block';
+          alert('An error occurred while processing your LinkedIn data. Please try again.');
+        });
+      });
+    }
+  });
+</script>

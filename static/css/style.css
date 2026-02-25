@@ -1,0 +1,380 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.drop-area.highlight {
+    border-color: #007bff;
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    font-weight: 500;
+}
+
+.progress {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+#suggested-improvements-list table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#suggested-improvements-list th {
+    background-color: #f8f9fa;
+}
+
+#suggested-improvements-list td.text-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+#suggested-improvements-list td.text-success {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.btn {
+    border-radius: 6px;
+    padding: 8px 16px;
+}
+
+footer {
+    margin-top: 100px;
+}
+
+.upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 3rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.upload-area:hover, .upload-area.highlight {
+    border-color: #007bff;
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+.upload-area p {
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+}
+
+.resume-score {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.progress {
+    height: 2rem;
+    font-size: 1rem;
+}
+
+.keyword-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    margin: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.detected {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.missing {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+#loading-section {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.list-group-item {
+    border-left: none;
+    border-right: none;
+    padding: 1rem;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .upload-area {
+        padding: 2rem;
+    }
+}
+
+
+/* New landing page styles */
+/* Add these new styles for the landing page */
+.text-gradient {
+    background: linear-gradient(90deg, #007bff, #6610f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+.feature-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.feature-bullet {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-radius: 50%;
+}
+
+.landing-hero {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.btn-lg {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-radius: 50%;
+}
+
+.feature-icon i {
+    font-size: 24px;
+}
+
+.step-icon {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+/* Add these styles for the PDF modal */
+.pdf-container {
+    height: 80vh;
+    width: 100%;
+    border: 1px solid #dee2e6;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.pdf-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.modal-xl {
+    max-width: 90%;
+}
+
+.modal-content {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Add these styles for the resume guide */
+.guide-container {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+/* Add these styles for the resume guide modal */
+.guide-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.guide-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.guide-section h4 {
+    margin-bottom: 1rem;
+    color: #0d6efd;
+    display: flex;
+    align-items: center;
+}
+
+.guide-section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.guide-example {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #0d6efd;
+}
+
+.guide-example h6 {
+    color: #0d6efd;
+}
+
+.guide-do-dont {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.guide-do, .guide-dont {
+    flex: 1;
+    min-width: 250px;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.guide-do {
+    background-color: rgba(25, 135, 84, 0.1);
+    border-left: 4px solid #198754;
+}
+
+.guide-dont {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid #dc3545;
+}
+
+.guide-do h5 {
+    color: #198754;
+}
+
+.guide-dont h5 {
+    color: #dc3545;
+}
+
+.guide-tip {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left: 4px solid #ffc107;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.action-verbs-category {
+    background-color: #f8f9fa;
+    padding: 0.75rem;
+    border-radius: 8px;
+    height: 100%;
+}
+
+.action-verbs-category h6 {
+    color: #0d6efd;
+    margin-bottom: 0.5rem;
+}
+
+.action-verbs-category p {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+}
+
+.guide-download-btn {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.example-content {
+    padding-left: 0.5rem;
+}
