@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Import - Resume Analyzer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">Resume Analyzer</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analyzer">Resume Analyzer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/compare">Compare Resumes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/plagiarism">Plagiarism Checker</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Add this at the top of your body, after the nav -->
+    <div class="container py-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="mb-4"><i class="fab fa-linkedin text-info me-2"></i>LinkedIn Profile Import</h1>
+                <p class="lead">Review and edit your imported LinkedIn profile data before generating your resume.</p>
+                
+                <!-- Add flash messages support -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Add LinkedIn connection status -->
+                {% if not session.get('linkedin_profile') %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> You haven't connected your LinkedIn profile yet.
+                        <a href="/linkedin-auth" class="btn btn-info btn-sm ms-3">
+                            <i class="fab fa-linkedin me-1"></i>Connect Now
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i> LinkedIn profile successfully imported!
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0">Profile Information</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="linkedinProfileForm">
+                            <!-- Personal Information -->
+                            <div class="mb-4">
+                                <h5 class="border-bottom pb-2">Personal Information</h5>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="fullName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="fullName" value="John Smith">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="headline" class="form-label">Headline</label>
+                                        <input type="text" class="form-control" id="headline" value="Senior Software Engineer at Tech Company">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" value="john.smith@example.com">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">Phone</label>
+                                        <input type="tel" class="form-control" id="phone" value="(555) 123-4567">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="location" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="location" value="San Francisco, CA">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="about" class="form-label">About</label>
+                                        <textarea class="form-control" id="about" rows="4">Experienced software engineer with 8+ years of experience in full-stack development. Passionate about creating scalable web applications and solving complex problems.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Experience -->
+                            <div class="mb-4">
+                                <h5 class="border-bottom pb-2">Experience</h5>
+                                <div id="experienceContainer">
+                                    <div class="experience-item card mb-3">
+                                        <div class="card-body">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Company</label>
+                                                    <input type="text" class="form-control" value="Tech Company Inc.">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Title</label>
+                                                    <input type="text" class="form-control" value="Senior Software Engineer">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Start Date</label>
+                                                    <input type="text" class="form-control" value="January 2020">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">End Date</label>
+                                                    <input type="text" class="form-control" value="Present">
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label">Description</label>
+                                                    <textarea class="form-control" rows="3">- Led development of company's flagship product
+- Managed a team of 5 developers
+- Implemented CI/CD pipeline reducing deployment time by 40%
+- Optimized database queries improving performance by 60%</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="experience-item card mb-3">
+                                        <div class="card-body">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Company</label>
+                                                    <input type="text" class="form-control" value="Previous Company LLC">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Title</label>
+                                                    <input type="text" class="form-control" value="Software Developer">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Start Date</label>
+                                                    <input type="text" class="form-control" value="June 2017">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">End Date</label>
+                                                    <input type="text" class="form-control" value="December 2019">
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label">Description</label>
+                                                    <textarea class="form-control" rows="3">- Developed and maintained web applications using React and Node.js
+- Collaborated with UX designers to implement responsive designs
+- Reduced bug count by 30% through implementation of unit testing</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary mt-2" id="addExperienceBtn">
+                                    <i class="fas fa-plus me-2"></i>Add Experience
+                                </button>
+                            </div>
+
+                            <!-- Education -->
+                            <div class="mb-4">
+                                <h5 class="border-bottom pb-2">Education</h5>
+                                <div id="educationContainer">
+                                    <div class="education-item card mb-3">
+                                        <div class="card-body">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">School</label>
+                                                    <input type="text" class="form-control" value="University of Technology">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Degree</label>
+                                                    <input type="text" class="form-control" value="Bachelor of Science in Computer Science">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Start Year</label>
+                                                    <input type="text" class="form-control" value="2013">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">End Year</label>
+                                                    <input type="text" class="form-control" value="2017">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary mt-2" id="addEducationBtn">
+                                    <i class="fas fa-plus me-2"></i>Add Education
+                                </button>
+                            </div>
+
+                            <!-- Skills -->
+                            <div class="mb-4">
+                                <h5 class="border-bottom pb-2">Skills</h5>
+                                <div class="mb-3">
+                                    <label class="form-label">Skills (comma separated)</label>
+                                    <textarea class="form-control" id="skills" rows="3">JavaScript, React, Node.js, Python, AWS, Docker, Git, CI/CD, Agile Methodologies, Team Leadership, Problem Solving</textarea>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" class="btn btn-secondary me-md-2">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Generate Resume</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mb-4 sticky-top" style="top: 20px;">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Tips</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h5><i class="fas fa-lightbulb text-warning me-2"></i>Enhance Your Profile</h5>
+                            <ul class="list-unstyled ps-3">
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Add quantifiable achievements</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Use action verbs in descriptions</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Include relevant skills for your target job</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Keep descriptions concise and impactful</li>
+                            </ul>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>You can edit all imported information before generating your resume.
+                        </div>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Remember to tailor your resume for each specific job application.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2025 Resume Analyzer. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add Experience button functionality
+            const addExperienceBtn = document.getElementById('addExperienceBtn');
+            const experienceContainer = document.getElementById('experienceContainer');
+            
+            if (addExperienceBtn && experienceContainer) {
+                addExperienceBtn.addEventListener('click', function() {
+                    const newExperience = document.createElement('div');
+                    newExperience.className = 'experience-item card mb-3';
+                    newExperience.innerHTML = `
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Company</label>
+                                    <input type="text" class="form-control" placeholder="Company name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Title</label>
+                                    <input type="text" class="form-control" placeholder="Job title">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Start Date</label>
+                                    <input type="text" class="form-control" placeholder="Month Year">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">End Date</label>
+                                    <input type="text" class="form-control" placeholder="Month Year or Present">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" rows="3" placeholder="Describe your responsibilities and achievements"></textarea>
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button type="button" class="btn btn-sm btn-outline-danger remove-item">
+                                        <i class="fas fa-trash me-1"></i>Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    experienceContainer.appendChild(newExperience);
+                    
+                    // Add event listener to the remove button
+                    const removeBtn = newExperience.querySelector('.remove-item');
+                    removeBtn.addEventListener('click', function() {
+                        experienceContainer.removeChild(newExperience);
+                    });
+                });
+            }
+            
+            // Add Education button functionality
+            const addEducationBtn = document.getElementById('addEducationBtn');
+            const educationContainer = document.getElementById('educationContainer');
+            
+            if (addEducationBtn && educationContainer) {
+                addEducationBtn.addEventListener('click', function() {
+                    const newEducation = document.createElement('div');
+                    newEducation.className = 'education-item card mb-3';
+                    newEducation.innerHTML = `
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">School</label>
+                                    <input type="text" class="form-control" placeholder="School name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Degree</label>
+                                    <input type="text" class="form-control" placeholder="Degree and major">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Start Year</label>
+                                    <input type="text" class="form-control" placeholder="Start year">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">End Year</label>
+                                    <input type="text" class="form-control" placeholder="End year or Expected">
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button type="button" class="btn btn-sm btn-outline-danger remove-item">
+                                        <i class="fas fa-trash me-1"></i>Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    educationContainer.appendChild(newEducation);
+                    
+                    // Add event listener to the remove button
+                    const removeBtn = newEducation.querySelector('.remove-item');
+                    removeBtn.addEventListener('click', function() {
+                        educationContainer.removeChild(newEducation);
+                    });
+                });
+            }
+            
+            // Form submission
+            const linkedinProfileForm = document.getElementById('linkedinProfileForm');
+            if (linkedinProfileForm) {
+                linkedinProfileForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Resume generation feature will be implemented soon!');
+                    // In a real implementation, you would:
+                    // 1. Collect all form data
+                    // 2. Send it to the server
+                    // 3. Generate a resume based on the data
+                    // 4. Redirect to a page where the user can download the resume
+                });
+            }
+        });
+    </script>
+</body>
+</html>
