@@ -182,12 +182,12 @@ def default_analysis():
 os.makedirs('static/examples', exist_ok=True)
 
 # Copy the sample PDF to the examples directory
-import shutil
-try:
-    shutil.copy("C:\\Users\\tiwar\\Downloads\\sample.pdf", "static/examples/example_resume.pdf")
-    print("Sample resume copied successfully")
-except Exception as e:
-    print(f"Error copying sample resume: {str(e)}")
+# import shutil
+# try:
+#     shutil.copy("C:\\Users\\tiwar\\Downloads\\sample.pdf", "static/examples/example_resume.pdf")
+#     print("Sample resume copied successfully")
+# except Exception as e:
+#     print(f"Error copying sample resume: {str(e)}")
 
 @app.route('/')
 def landing():
