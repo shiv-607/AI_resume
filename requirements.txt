@@ -1,7 +1,6 @@
 flask
-nltk
-scikit-learn
-pandas
-numpy
+openai
+PyPDF2
+python-docx
+requests
 gunicorn
-google-generativeai
