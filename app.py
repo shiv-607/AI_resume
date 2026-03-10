@@ -16,9 +16,12 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Initialize Kluster AI client
+import os
+from openai import OpenAI
+
 client = OpenAI(
-    api_key="fdd5642c-cba8-4c2b-842f-9bd4ce775011",
-    base_url="https://api.kluster.ai/v1"
+    api_key=os.getenv("sk-167259ef27f043fab3e477da1b6f8ff5"),
+    base_url="https://api.deepseek.com"
 )
 
 # Ensure upload directory exists
