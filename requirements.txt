@@ -2,5 +2,6 @@ flask
 openai
 PyPDF2
 python-docx
+werkzeug
 requests
 gunicorn
